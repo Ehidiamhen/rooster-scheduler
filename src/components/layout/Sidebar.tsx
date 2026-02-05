@@ -53,7 +53,7 @@ const NavItem = ({ icon: IconComp, label, isActive, hasSubmenu, isOpen, isSubIte
 
             <IconComp size={22} variant={isActive ? "Outline" : "Linear"} />
 
-            <Text fontWeight={isOpen ? 700 : 500} color={isOpen ? "black" : "gray.500"} fontSize="16px" flex="1" ml={2}>
+            <Text fontWeight={isOpen ? 700 : 500} color={isOpen ? "black" : isActive ? "brand.primary" : "gray.500"} fontSize="16px" flex="1" ml={2}>
                 {label}
             </Text>
 
@@ -74,6 +74,8 @@ export const Sidebar = () => {
             borderColor="gray.100"
             direction="column"
             py={8}
+            overflow="hidden"
+            display={{ base: "none", md: "flex" }}
         >
             <HStack align="center" px={4} mb={10} justify="space-between">
                 <Image src={logo} alt="Excellent Care Clinics" />
