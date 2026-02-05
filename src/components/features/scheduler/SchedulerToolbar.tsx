@@ -1,9 +1,11 @@
 "use client";
 
 import { Box, HStack, Text, IconButton, Button } from "@chakra-ui/react";
-import { FiChevronLeft, FiChevronRight, FiChevronDown, FiFilter, FiPlus, FiUsers } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight, FiChevronDown, FiFilter, FiPlus, FiCheck } from "react-icons/fi";
+import { LuLock } from "react-icons/lu";
 import { PiUsersThree } from "react-icons/pi";
-
+import { Menu, Portal } from "@chakra-ui/react";
+import { useScheduler } from "@/context/SchedulerContext";
 
 interface SchedulerToolbarProps {
     currentDate: Date;
@@ -12,18 +14,27 @@ interface SchedulerToolbarProps {
     onToday?: () => void;
 }
 
+type DateRange = "deze_dag" | "deze_week" | "maand" | "custom";
+
 export default function SchedulerToolbar({
     currentDate,
     onPrevDay,
     onNextDay,
     onToday,
 }: SchedulerToolbarProps) {
+    const { isLive } = useScheduler();
     const dayName = currentDate.toLocaleDateString("en-US", { weekday: "short" });
     const dayNumber = currentDate.getDate();
     const monthYear = currentDate.toLocaleDateString("en-US", {
         month: "short",
         year: "numeric",
     });
+
+    const handleDateRangeSelect = (range: DateRange) => {
+        if (range === "deze_dag") {
+            onToday?.();
+        }
+    };
 
     return (
         <HStack
@@ -121,22 +132,86 @@ export default function SchedulerToolbar({
                     </IconButton>
                 </HStack>
 
-                <Button
-                    variant="outline"
-                    size="sm"
-                    borderRadius="8px"
-                    borderColor="grid.outline"
-                    color="neutral.black"
-                    fontSize="14px"
-                    h="38px"
-                    px={3}
-                >
-                    <HStack gap={2}>
-                        <Box w={2} h={2} bg="brand.green" borderRadius="full" />
-                        <Text>This day</Text>
-                        <FiChevronDown size={18} />
-                    </HStack>
-                </Button>
+                <Menu.Root>
+                    <Menu.Trigger asChild>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            borderRadius="8px"
+                            borderColor="grid.outline"
+                            color="neutral.black"
+                            fontSize="14px"
+                            h="38px"
+                            px={3}
+                        >
+                            <HStack gap={2}>
+                                <Box w={2} h={2} bg="brand.green" borderRadius="full" />
+                                <Text>This day</Text>
+                                <FiChevronDown size={18} />
+                            </HStack>
+                        </Button>
+                    </Menu.Trigger>
+                    <Portal>
+                        <Menu.Positioner>
+                            <Menu.Content
+                                bg="white"
+                                borderRadius="12px"
+                                border="1px solid"
+                                borderColor="grid.outline"
+                                shadow="0px 4px 16px 0px rgba(100,100,100,0.1)"
+                                p={2}
+                                minW="160px"
+                            >
+                                <Menu.Item
+                                    value="deze_dag"
+                                    onClick={() => handleDateRangeSelect("deze_dag")}
+                                    borderRadius="8px"
+                                    px={2}
+                                    py={2}
+                                    _hover={{ bg: "gray.50" }}
+                                >
+                                    <HStack justify="space-between" w="full">
+                                        <Text fontSize="14px" fontWeight="medium" color="neutral.black">Deze dag</Text>
+                                        <FiCheck size={16} color="#19C34C" />
+                                    </HStack>
+                                </Menu.Item>
+                                <Menu.Item
+                                    value="deze_week"
+                                    onClick={() => handleDateRangeSelect("deze_week")}
+                                    borderRadius="8px"
+                                    px={2}
+                                    py={2}
+                                    _hover={{ bg: "gray.50" }}
+                                >
+                                    <Text fontSize="14px" fontWeight="medium" color="neutral.grey">Deze week</Text>
+                                </Menu.Item>
+                                <Menu.Item
+                                    value="maand"
+                                    onClick={() => handleDateRangeSelect("maand")}
+                                    borderRadius="8px"
+                                    px={2}
+                                    py={2}
+                                    _hover={{ bg: "gray.50" }}
+                                >
+                                    <Text fontSize="14px" fontWeight="medium" color="neutral.grey">Maand</Text>
+                                </Menu.Item>
+                                <Menu.Item
+                                    value="custom"
+                                    onClick={() => handleDateRangeSelect("custom")}
+                                    borderRadius="8px"
+                                    px={2}
+                                    py={2}
+                                    _hover={{ bg: "gray.50" }}
+                                >
+                                    <HStack gap={2}>
+                                        <Text fontSize="14px" fontWeight="medium" color="neutral.grey">Custom</Text>
+                                        <FiPlus size={14} color="#4E5D69" />
+                                    </HStack>
+                                </Menu.Item>
+                            </Menu.Content>
+                        </Menu.Positioner>
+                    </Portal>
+                </Menu.Root>
 
                 <Button
                     variant="outline"
@@ -162,7 +237,7 @@ export default function SchedulerToolbar({
                     px={3}
                 >
                     <HStack gap={2}>
-                        <FiPlus size={18} />
+                        {isLive ? <FiPlus size={18} /> : <LuLock size={18} />}
                         <Text>Lock Shift</Text>
                     </HStack>
                 </Button>

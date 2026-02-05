@@ -3,3 +3,6 @@ export { default as ResourceHeader } from "./ResourceHeader";
 export { default as TimeSidebar } from "./TimeSidebar";
 export { default as SchedulerGrid } from "./SchedulerGrid";
 export { ViewModeToggle } from "./ViewModeToggle";
+export { ShiftCard } from "./ShiftCard";
+export { ShiftDetailsModal } from "./ShiftDetailsModal";
+export { RosterPanel } from "./RosterPanel";
