@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Box, HStack, VStack, Text, IconButton, Input } from "@chakra-ui/react";
-import { FiSearch, FiFilter, FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
+import { Box, HStack, VStack, Text, IconButton, Input, Separator } from "@chakra-ui/react";
+import { FiSearch, FiFilter } from "react-icons/fi";
+import { BsArrowsAngleExpand } from "react-icons/bs";
 import { MOCK_EMPLOYEES, Employee } from "@/lib/mockData";
 
 interface RosterPanelProps {
@@ -15,93 +16,127 @@ type TabType = "all" | "available" | "on_leave";
 function EmployeeCard({ employee }: { employee: Employee }) {
     return (
         <Box
-            p={3}
+            p="10px"
             borderRadius="12px"
             border="1px solid"
-            borderColor="grid.outline"
+            borderColor="#d9e5f2"
             bg="white"
             _hover={{ borderColor: "brand.primary" }}
             cursor="grab"
             transition="all 0.15s ease"
         >
-            <HStack justify="space-between" mb={2}>
-                <HStack gap={2}>
+            <HStack gap="8px" align="start">
+                {/* Left section: Avatar + Info */}
+                <HStack gap="10px" flex={1} align="start">
+                    {/* Avatar */}
                     <Box
-                        bg="brand.primary"
-                        color="white"
-                        w="32px"
-                        h="32px"
+                        bg="#f3f5f7"
+                        color="#4e5d69"
+                        w="40px"
+                        h="40px"
                         borderRadius="full"
                         display="flex"
                         alignItems="center"
                         justifyContent="center"
                         fontSize="12px"
                         fontWeight="semibold"
+                        flexShrink={0}
                     >
                         {employee.initials}
                     </Box>
-                    <VStack align="start" gap={0}>
-                        <Text fontSize="14px" fontWeight="semibold" color="neutral.black">
+
+                    {/* Name and badges */}
+                    <VStack align="start" gap="10px" flex={1}>
+                        <Text fontSize="14px" fontWeight="semibold" color="#242424" lineHeight="1">
                             {employee.name}
                         </Text>
-                        {employee.leaveDates && (
-                            <Text fontSize="11px" color="#E35F00">
-                                {employee.leaveDates}
-                            </Text>
-                        )}
+
+                        <VStack align="start" gap="6px">
+                            {/* Hours badges */}
+                            <HStack gap="4px">
+                                <Box
+                                    bg="#f0f5fa"
+                                    px="6px"
+                                    py="4px"
+                                    borderRadius="6px"
+                                >
+                                    <Text fontSize="10px" fontWeight="medium" color="#4e5d69" lineHeight="1">
+                                        {employee.totalHours}
+                                    </Text>
+                                </Box>
+                                <Box
+                                    bg="#f0f5fa"
+                                    px="6px"
+                                    py="4px"
+                                    borderRadius="6px"
+                                >
+                                    <Text fontSize="10px" fontWeight="medium" color="#4e5d69" lineHeight="1">
+                                        {employee.weeklyHours}
+                                    </Text>
+                                </Box>
+                            </HStack>
+
+                            {/* Leave dates badge */}
+                            {employee.leaveDates && (
+                                <Box
+                                    bg="#feecec"
+                                    px="6px"
+                                    py="6px"
+                                    borderRadius="4px"
+                                >
+                                    <Text fontSize="10px" fontWeight="medium" color="#ef2e2e" lineHeight="1" textAlign="center">
+                                        {employee.leaveDates}
+                                    </Text>
+                                </Box>
+                            )}
+                        </VStack>
                     </VStack>
                 </HStack>
-                <VStack align="end" gap={0}>
-                    <Text fontSize="12px" fontWeight="medium" color="neutral.black">
-                        {employee.totalHours}
-                    </Text>
-                    <Text fontSize="11px" color="neutral.grey">
-                        {employee.weeklyHours}
-                    </Text>
-                </VStack>
-            </HStack>
-            {/* Status badge */}
-            {employee.status === "on_leave" && (
-                <HStack justify="space-between" align="center" mt={1}>
-                    <HStack gap={1}>
+
+                {/* Right section: Status + Days */}
+                <VStack align="end" gap="8px" w="106px">
+                    {/* On leave status badge */}
+                    {employee.status === "on_leave" && (
+                        <HStack
+                            bg="#feecec"
+                            px="6px"
+                            py="4px"
+                            borderRadius="16px"
+                            gap="4px"
+                        >
+                            <Box w="3px" h="3px" borderRadius="full" bg="#ef2e2e" />
+                            <Text fontSize="10px" fontWeight="medium" color="#ef2e2e" lineHeight="1">
+                                On leave
+                            </Text>
+                        </HStack>
+                    )}
+
+                    {/* Weekday availability badges */}
+                    <HStack gap="4px" w="full">
                         {employee.availableDays.map((d) => (
                             <Box
                                 key={d.day}
-                                px={1.5}
-                                py={0.5}
-                                borderRadius="4px"
-                                bg={d.available ? "brand.greenLight" : "neutral.light"}
-                                fontSize="10px"
-                                fontWeight="medium"
-                                color={d.available ? "brand.green" : "neutral.grey"}
+                                w="18px"
+                                h="18px"
+                                borderRadius="16px"
+                                bg={d.available ? "#ebffef" : "#ffefe7"}
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
                             >
-                                {d.day}
+                                <Text
+                                    fontSize="10px"
+                                    fontWeight="medium"
+                                    color={d.available ? "#37a55c" : "#f55300"}
+                                    lineHeight="1"
+                                >
+                                    {d.day}
+                                </Text>
                             </Box>
                         ))}
                     </HStack>
-                    <Text fontSize="11px" color="#E35F00" fontWeight="medium">
-                        • On leave
-                    </Text>
-                </HStack>
-            )}
-            {employee.status !== "on_leave" && (
-                <HStack gap={1}>
-                    {employee.availableDays.map((d) => (
-                        <Box
-                            key={d.day}
-                            px={1.5}
-                            py={0.5}
-                            borderRadius="4px"
-                            bg={d.available ? "brand.greenLight" : "neutral.light"}
-                            fontSize="10px"
-                            fontWeight="medium"
-                            color={d.available ? "brand.green" : "neutral.grey"}
-                        >
-                            {d.day}
-                        </Box>
-                    ))}
-                </HStack>
-            )}
+                </VStack>
+            </HStack>
         </Box>
     );
 }
@@ -131,112 +166,144 @@ export function RosterPanel({ isOpen, onToggle }: RosterPanelProps) {
 
     return (
         <Box
-            w="280px"
+            w="350px"
             h="full"
             bg="white"
             flexShrink={0}
-            pt={2}
-
+            p="24px"
+            border="2px solid"
+            borderColor="#f3f4f6"
+            borderRadius="16px"
+            display="flex"
+            flexDirection="column"
+            gap="20px"
             overflowY="auto"
         >
-            <VStack gap={4} align="stretch">
-                <HStack justify="space-between" align="center">
-                    <HStack gap={2}>
-                        <IconButton
-                            aria-label="Collapse Panel"
-                            variant="ghost"
-                            size="xs"
-                            color="neutral.grey"
-                            onClick={onToggle}
-                            _hover={{ bg: "gray.50" }}
-                        >
-                            <FiChevronsLeft size={16} />
-                        </IconButton>
-                        <Text fontSize="16px" fontWeight="bold" color="neutral.black">
-                            Roster
-                        </Text>
-                    </HStack>
+            {/* Header */}
+            <HStack
+                justify="space-between"
+                align="center"
+                pb="16px"
+                borderBottom="1px solid"
+                borderColor="#f3f4f6"
+            >
+                <HStack gap="12px" align="center">
+                    <Box color="#4e5d69" cursor="pointer" onClick={onToggle} _hover={{ bg: "#f3f4f6", color: "#141b34" }} p={2} borderRadius="6px" >
+                        <BsArrowsAngleExpand size={20} />
+                    </Box>
+                    {/* <Separator orientation="vertical" color="black" /> */}
+                    {/* <Box w="0" h="24px" borderLeft="1px solid" borderColor="#f3f4f6" transform="rotate(90deg)" /> */}
+                    <Text fontSize="18px" fontWeight="bold" color="#141b34" letterSpacing="-0.36px" borderLeft="1px solid" borderColor="gray.400" pl="12px">
+                        Roster
+                    </Text>
                 </HStack>
+            </HStack>
 
-                {/* Search and filter */}
-                <HStack gap={2}>
-                    <Box position="relative" flex={1}>
+            {/* Search and filter */}
+            <HStack gap="8px">
+                <Box position="relative" flex={1}>
+                    <Box
+                        border="1px solid"
+                        borderColor="#d9e5f2"
+                        borderRadius="8px"
+                        px="12px"
+                        py="4px"
+                        display="flex"
+                        alignItems="center"
+                        gap="8px"
+                    >
+                        <FiSearch size={20} color="#7e919f" />
                         <Input
                             placeholder="Search"
+                            variant="flushed"
                             size="sm"
-                            borderRadius="8px"
-                            borderColor="grid.outline"
-                            pl={9}
-                            h="36px"
                             fontSize="14px"
+                            fontWeight="medium"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            _placeholder={{ color: "neutral.grey" }}
+                            _placeholder={{ color: "#7e919f" }}
+                            color="black"
                         />
-                        <Box position="absolute" left={3} top="50%" transform="translateY(-50%)">
-                            <FiSearch size={16} color="#4E5D69" />
-                        </Box>
                     </Box>
-                    <IconButton
-                        aria-label="Filter"
-                        variant="outline"
-                        size="sm"
-                        borderRadius="8px"
-                        borderColor="grid.outline"
-                        color="neutral.grey"
-                        h="36px"
-                        w="36px"
-                    >
-                        <FiFilter size={16} />
-                    </IconButton>
-                </HStack>
+                </Box>
+                <Box
+                    border="1px solid"
+                    borderColor="#d9e5f2"
+                    borderRadius="8px"
+                    p="12px"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    cursor="pointer"
+                    _hover={{ bg: "gray.50" }}
+                >
+                    <FiFilter size={20} color="#7e919f" />
+                </Box>
+            </HStack>
 
-                {/* Tabs */}
-                <HStack gap={2}>
-                    {(["all", "available", "on_leave"] as TabType[]).map((tab) => (
-                        <HStack
-                            key={tab}
-                            px={2}
-                            py={1}
-                            borderRadius="full"
-                            bg={activeTab === tab ? "neutral.black" : "transparent"}
+            {/* Horizontal Tabs */}
+            <Box borderBottom="1px solid" borderColor="#e9eaeb">
+                <HStack gap="12px">
+                    {([
+                        { key: "all", label: "All" },
+                        { key: "available", label: "Available" },
+                        { key: "on_leave", label: "On Leave" },
+                    ] as { key: TabType; label: string }[]).map((tab) => (
+                        <Box
+                            key={tab.key}
+                            pb="10px"
+                            px="4px"
+                            borderBottom="2px solid"
+                            borderColor={activeTab === tab.key ? "#5653fc" : "transparent"}
                             cursor="pointer"
-                            onClick={() => setActiveTab(tab)}
+                            onClick={() => setActiveTab(tab.key)}
                             transition="all 0.15s ease"
                         >
-                            <Text
-                                fontSize="12px"
-                                fontWeight="medium"
-                                color={activeTab === tab ? "white" : "neutral.grey"}
-                            >
-                                {tab === "all" ? "All" : tab === "available" ? "Available" : "On Leave"}
-                            </Text>
-                            <Text
-                                fontSize="12px"
-                                fontWeight="semibold"
-                                color={activeTab === tab ? "white" : tab === "on_leave" ? "#E35F00" : "neutral.black"}
-                            >
-                                {tabCounts[tab]}
-                            </Text>
-                        </HStack>
+                            <HStack gap="8px">
+                                <Text
+                                    fontSize="14px"
+                                    fontWeight={activeTab === tab.key ? "semibold" : "medium"}
+                                    color={activeTab === tab.key ? "#5653fc" : "#717680"}
+                                    lineHeight="24px"
+                                >
+                                    {tab.label}
+                                </Text>
+                                <Box
+                                    bg="#f7fafc"
+                                    border="1px solid"
+                                    borderColor="#d9e5f2"
+                                    borderRadius="16px"
+                                    px="8px"
+                                    py="2px"
+                                >
+                                    <Text
+                                        fontSize="14px"
+                                        fontWeight="medium"
+                                        color={activeTab === tab.key ? "#5653fc" : "#414651"}
+                                        lineHeight="24px"
+                                    >
+                                        {tabCounts[tab.key]}
+                                    </Text>
+                                </Box>
+                            </HStack>
+                        </Box>
                     ))}
                 </HStack>
+            </Box>
 
-                {/* Employee list */}
-                <VStack gap={3} align="stretch">
-                    {filteredEmployees.map((employee) => (
-                        <EmployeeCard key={employee.id} employee={employee} />
-                    ))}
-                    {filteredEmployees.length === 0 && (
-                        <Text fontSize="14px" color="neutral.grey" textAlign="center" py={4}>
-                            No employees found
-                        </Text>
-                    )}
-                </VStack>
+            {/* Employee list */}
+            <VStack gap="16px" align="stretch" flex={1} overflowY="auto">
+                {filteredEmployees.map((employee) => (
+                    <EmployeeCard key={employee.id} employee={employee} />
+                ))}
+                {filteredEmployees.length === 0 && (
+                    <Text fontSize="14px" color="#717680" textAlign="center" py={4}>
+                        No employees found
+                    </Text>
+                )}
             </VStack>
         </Box>
     );
 }
 
 export default RosterPanel;
-

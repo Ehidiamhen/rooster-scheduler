@@ -7,16 +7,18 @@ export type ViewMode = "live" | "planner";
 
 interface ExtendedSchedulerState extends SchedulerState {
     viewMode: ViewMode;
+    isRosterOpen: boolean;
 }
 
 const initialState: ExtendedSchedulerState = {
     currentDate: new Date(),
     viewMode: "live",
+    isRosterOpen: false,
     resources: [],
     shifts: []
 };
 
-type ExtendedAction = Action | { type: "SET_VIEW_MODE"; payload: ViewMode };
+type ExtendedAction = Action | { type: "SET_VIEW_MODE"; payload: ViewMode } | { type: "TOGGLE_ROSTER" } | { type: "SET_ROSTER_OPEN"; payload: boolean };
 
 const schedulerReducer = (state: ExtendedSchedulerState, action: ExtendedAction): ExtendedSchedulerState => {
     switch (action.type) {
@@ -24,6 +26,10 @@ const schedulerReducer = (state: ExtendedSchedulerState, action: ExtendedAction)
             return { ...state, currentDate: action.payload };
         case "SET_VIEW_MODE":
             return { ...state, viewMode: action.payload };
+        case "TOGGLE_ROSTER":
+            return { ...state, isRosterOpen: !state.isRosterOpen };
+        case "SET_ROSTER_OPEN":
+            return { ...state, isRosterOpen: action.payload };
         case "ADD_SHIFT":
             return { ...state, shifts: [...state.shifts, action.payload] };
         case "MOVE_SHIFT": {
@@ -49,8 +55,11 @@ interface SchedulerContextValue {
     currentDate: Date;
     viewMode: ViewMode;
     isLive: boolean;
+    isRosterOpen: boolean;
     setDate: (date: Date) => void;
     setViewMode: (mode: ViewMode) => void;
+    toggleRoster: () => void;
+    setRosterOpen: (open: boolean) => void;
     goToPrevDay: () => void;
     goToNextDay: () => void;
     goToToday: () => void;
@@ -68,8 +77,11 @@ export const SchedulerProvider = ({ children }: { children: ReactNode }) => {
         currentDate: state.currentDate,
         viewMode: state.viewMode,
         isLive: state.viewMode === "live",
+        isRosterOpen: state.isRosterOpen,
         setDate: (date: Date) => dispatch({ type: "SET_DATE", payload: date }),
         setViewMode: (mode: ViewMode) => dispatch({ type: "SET_VIEW_MODE", payload: mode }),
+        toggleRoster: () => dispatch({ type: "TOGGLE_ROSTER" }),
+        setRosterOpen: (open: boolean) => dispatch({ type: "SET_ROSTER_OPEN", payload: open }),
         goToPrevDay: () => dispatch({
             type: "SET_DATE",
             payload: new Date(state.currentDate.getTime() - 24 * 60 * 60 * 1000)

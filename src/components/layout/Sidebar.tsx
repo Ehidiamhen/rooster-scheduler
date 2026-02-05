@@ -74,8 +74,6 @@ export const Sidebar = () => {
             borderColor="gray.100"
             direction="column"
             py={8}
-            overflowY="auto"
-            css={{ '&::-webkit-scrollbar': { width: '4px' }, '&::-webkit-scrollbar-thumb': { background: '#EDF2F7', borderRadius: '4px' } }}
         >
             <HStack align="center" px={4} mb={10} justify="space-between">
                 <Image src={logo} alt="Excellent Care Clinics" />

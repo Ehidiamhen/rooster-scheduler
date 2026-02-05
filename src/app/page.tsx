@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { Box, HStack, VStack, IconButton } from "@chakra-ui/react";
+import { Box, HStack, VStack } from "@chakra-ui/react";
 import { SchedulerToolbar, SchedulerGrid, ViewModeToggle, RosterPanel } from "@/components/features/scheduler";
-import { FiChevronsRight } from "react-icons/fi";
 import { useScheduler } from "@/context/SchedulerContext";
 
 export default function Home() {
@@ -14,10 +12,10 @@ export default function Home() {
     setViewMode,
     goToPrevDay,
     goToNextDay,
-    goToToday
+    goToToday,
+    isRosterOpen,
+    toggleRoster
   } = useScheduler();
-
-  const [isRosterOpen, setIsRosterOpen] = useState(false);
 
   const modeDescription = viewMode === "live"
     ? "Description of the live"
@@ -36,7 +34,7 @@ export default function Home() {
 
         <Box flex={1} px={6} overflow="hidden" position="relative">
           <HStack gap={4} h="full" align="stretch">
-            <RosterPanel isOpen={isRosterOpen} onToggle={() => setIsRosterOpen(!isRosterOpen)} />
+            <RosterPanel isOpen={isRosterOpen} onToggle={toggleRoster} />
 
             <VStack gap={4} flex={1} align="stretch" overflow="hidden">
               <SchedulerToolbar
@@ -50,34 +48,8 @@ export default function Home() {
               </Box>
             </VStack>
           </HStack>
-
-          {!isRosterOpen && (
-            <IconButton
-              aria-label="Open Roster Panel"
-              position="absolute"
-              left={0}
-              top="50%"
-              transform="translateY(-50%)"
-              bg="white"
-              borderRadius="0 8px 8px 0"
-              border="1px solid"
-              borderColor="grid.outline"
-              borderLeft="none"
-              color="neutral.grey"
-              size="sm"
-              h="48px"
-              minW="24px"
-              onClick={() => setIsRosterOpen(true)}
-              _hover={{ bg: "gray.50" }}
-              zIndex={30}
-              shadow="sm"
-            >
-              <FiChevronsRight size={16} />
-            </IconButton>
-          )}
         </Box>
       </VStack>
     </DashboardLayout>
   );
 }
-

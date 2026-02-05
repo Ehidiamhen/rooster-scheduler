@@ -23,7 +23,7 @@ export function ShiftDetailsModal({
     const dayLabel = currentDate.toLocaleDateString("en-GB", {
         weekday: "long",
         year: "numeric",
-        month: "long",
+        month: "short",
         day: "numeric",
     });
     const timeLabel = shift.startTime.toLocaleTimeString("en-GB", {

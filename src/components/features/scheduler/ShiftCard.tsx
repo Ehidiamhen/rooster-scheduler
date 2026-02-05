@@ -58,7 +58,13 @@ export function ShiftCard({ shift, onClick, height }: ShiftCardProps) {
                 transform: "scale(1.01)",
             }}
         >
-            <HStack gap={2} align="flex-start">
+            <Box
+                display="flex"
+                flexWrap="wrap"
+                gap={2}
+                alignItems="flex-start"
+                justifyContent="flex-start"
+            >
                 <Box
                     bg="white"
                     borderRadius="full"
@@ -77,37 +83,42 @@ export function ShiftCard({ shift, onClick, height }: ShiftCardProps) {
                         {shift.employeeInitials}
                     </Text>
                 </Box>
-                <VStack align="start" gap={1} flex={1} overflow="hidden">
-                    <HStack gap={2} flexWrap="nowrap">
-                        <Text
-                            fontSize="14px"
-                            fontWeight="semibold"
-                            color="neutral.black"
-                            lineHeight="1"
-                            truncate
-                        >
-                            {shift.title}
-                        </Text>
-                        <Text
-                            fontSize="12px"
-                            fontWeight="medium"
-                            color="neutral.grey"
-                            lineHeight="1"
-                            flexShrink={0}
-                        >
-                            {timeRange}
-                        </Text>
-                    </HStack>
+                <VStack align="start" gap={1} minW={0} overflow="hidden">
+                    <Text
+                        fontSize="14px"
+                        fontWeight="semibold"
+                        color="neutral.black"
+                        lineHeight="1.2"
+                        wordBreak="break-word"
+                        css={{
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                        }}
+                    >
+                        {shift.title}
+                    </Text>
+                    <Text
+                        fontSize="12px"
+                        fontWeight="medium"
+                        color="neutral.grey"
+                        lineHeight="1"
+                        whiteSpace="nowrap"
+                    >
+                        {timeRange}
+                    </Text>
                     <Text
                         fontSize="12px"
                         fontWeight="medium"
                         color={colors.text}
                         lineHeight="1"
+                        wordBreak="break-word"
                     >
                         {shift.assigneeName}
                     </Text>
                 </VStack>
-            </HStack>
+            </Box>
         </Box>
     );
 }

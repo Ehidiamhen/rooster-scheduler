@@ -47,6 +47,17 @@ export const LIVE_SHIFTS: ShiftWithVariant[] = [
     },
     {
         id: "l3",
+        resourceId: "1",
+        startTime: createTime(11, 0),
+        endTime: createTime(12, 0),
+        title: "Pijnspecialist",
+        type: "Consultation",
+        assigneeName: "Diane Lane",
+        employeeInitials: "DL",
+        variant: "yellow",
+    },
+    {
+        id: "l4",
         resourceId: "2",
         startTime: createTime(13, 0),
         endTime: createTime(15, 0),
@@ -57,7 +68,7 @@ export const LIVE_SHIFTS: ShiftWithVariant[] = [
         variant: "green",
     },
     {
-        id: "l4",
+        id: "l5",
         resourceId: "3",
         startTime: createTime(11, 30),
         endTime: createTime(13, 30),
@@ -68,7 +79,7 @@ export const LIVE_SHIFTS: ShiftWithVariant[] = [
         variant: "green",
     },
     {
-        id: "l5",
+        id: "l6",
         resourceId: "3",
         startTime: createTime(16, 0),
         endTime: createTime(24, 0),
@@ -79,7 +90,7 @@ export const LIVE_SHIFTS: ShiftWithVariant[] = [
         variant: "yellow",
     },
     {
-        id: "l6",
+        id: "l7",
         resourceId: "4",
         startTime: createTime(11, 30),
         endTime: createTime(13, 30),

@@ -22,7 +22,7 @@ export default function SchedulerToolbar({
     onNextDay,
     onToday,
 }: SchedulerToolbarProps) {
-    const { isLive } = useScheduler();
+    const { isLive, isRosterOpen, toggleRoster } = useScheduler();
     const dayName = currentDate.toLocaleDateString("en-US", { weekday: "short" });
     const dayNumber = currentDate.getDate();
     const monthYear = currentDate.toLocaleDateString("en-US", {
@@ -71,6 +71,8 @@ export default function SchedulerToolbar({
                     color="black"
                     w="38px"
                     h="38px"
+                    onClick={toggleRoster}
+                    bg={isRosterOpen ? "gray.100" : "transparent"}
                 >
                     <PiUsersThree size={20} />
                 </IconButton>
