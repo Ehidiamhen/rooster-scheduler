@@ -1,101 +1,107 @@
 "use client"
 
-import { Box, VStack, HStack, Text, Icon, Flex, Badge } from "@chakra-ui/react"
+import { Flex, Text, VStack, Box, HStack } from "@chakra-ui/react"
+import Image from "next/image"
+import logo from "../../../public/logo.svg"
 import {
-    Home,
-    Calendar,
+    MenuBoard,
     DocumentText,
-    NoteText,
-    Setting2,
-    TaskSquare,
-    FolderOpen,
-    MessageQuestion,
-    Notification
+    ArrowDown2,
+    Maximize1,
+    HamburgerMenu,
+    Stickynote,
+    Document,
+    Notepad2,
+    Category2
 } from "iconsax-reactjs"
 
-const NAV_ITEMS = [
-    { label: "Startpagina", icon: Home, route: "/dashboard" },
-    {
-        label: "Rooster",
-        icon: Calendar,
-        route: "/rooster",
-        isActive: true,
-        subItems: [
-            { label: "Mijn Rooster", icon: DocumentText },
-            { label: "Planner", icon: NoteText, isActive: true },
-            { label: "Instellingen", icon: Setting2 }
-        ]
-    },
-    { label: "My to do Protocols", icon: TaskSquare, route: "/protocols" },
-    { label: "Document Management", icon: FolderOpen, route: "/documents" },
-    { label: "Department News", icon: NoteText, route: "/news" },
-    { label: "Knowledge Base", icon: MessageQuestion, route: "/kb" },
-    { label: "General News", icon: Notification, route: "/general-news" },
-]
+interface NavItemProps {
+    icon: any
+    label: string
+    isActive?: boolean
+    hasSubmenu?: boolean
+    isOpen?: boolean
+    isSubItem?: boolean
+}
+
+const NavItem = ({ icon: IconComp, label, isActive, hasSubmenu, isOpen, isSubItem }: NavItemProps) => {
+    return (
+        <HStack
+            w="full"
+            py={3}
+            px={6}
+            mx={isSubItem ? 7 : 0}
+            cursor="pointer"
+            color={isActive ? "brand.primary" : "gray.500"}
+            position="relative"
+            _hover={{ color: "brand.primary", bg: "gray.50" }}
+            transition="all 0.2s"
+            fontWeight={isActive ? "bold" : "medium"}
+            borderLeft={isSubItem ? "1px solid" : "none"}
+            borderLeftColor={isActive ? "brand.primary" : "gray.200"}
+        >
+            {isActive && (
+                <Box
+                    position="absolute"
+                    left={0}
+                    top={0}
+                    bottom={0}
+                    w="1px"
+                    bg="brand.primary"
+                />
+            )}
+
+            <IconComp size={22} variant={isActive ? "Outline" : "Linear"} />
+
+            <Text fontWeight={isOpen ? 700 : 500} color={isOpen ? "black" : "gray.500"} fontSize="16px" flex="1" ml={2}>
+                {label}
+            </Text>
+
+            {hasSubmenu && (
+                <ArrowDown2 size={16} variant="Linear" style={{ transform: isOpen ? "rotate(180deg)" : "none" }} />
+            )}
+        </HStack>
+    )
+}
 
 export const Sidebar = () => {
     return (
-        <Box
+        <Flex
             w="260px"
             h="100vh"
-            borderRight="1px solid"
-            borderColor="gray.200"
             bg="white"
-            position="sticky"
-            top={0}
-            flexShrink={0}
-            display={{ base: "none", md: "block" }}
+            borderRight="1px solid"
+            borderColor="gray.100"
+            direction="column"
+            py={8}
+            overflowY="auto"
+            css={{ '&::-webkit-scrollbar': { width: '4px' }, '&::-webkit-scrollbar-thumb': { background: '#EDF2F7', borderRadius: '4px' } }}
         >
-            <VStack gap={0} align="stretch" pt={6}>
-                {/* Logo Area */}
+            <HStack align="center" px={4} mb={10} justify="space-between">
+                <Image src={logo} alt="Excellent Care Clinics" />
+                <Box alignSelf="flex-start" border="1px solid" borderColor="brand.gray" rounded="lg" p={2}>
+                    <HamburgerMenu size={24} color="black" />
+                </Box>
+            </HStack>
 
-                <VStack gap={2} align="stretch" px={4} mt={6}>
-                    {NAV_ITEMS.map((item) => (
-                        <Box key={item.label}>
-                            <HStack
-                                py={2.5}
-                                px={3}
-                                borderRadius="md"
-                                color={item.isActive ? "blue.600" : "gray.600"}
-                                bg={item.isActive ? "blue.50" : "transparent"}
-                                _hover={{ bg: "gray.50" }}
-                                cursor="pointer"
-                            >
-                                <item.icon size={20} variant={item.isActive ? "Bold" : "Outline"} />
-                                <Text fontWeight={item.isActive ? "semibold" : "medium"} fontSize="sm">
-                                    {item.label}
-                                </Text>
-                            </HStack>
+            <VStack gap={2} align="stretch">
+                <NavItem icon={Category2} label="Startpagina" />
 
-                            {/* Sub Items */}
-                            {item.subItems && (
-                                <VStack gap={1} align="stretch" pl={4} mt={1}>
-                                    {item.subItems.map((sub) => (
-                                        <HStack
-                                            key={sub.label}
-                                            py={2}
-                                            px={3}
-                                            borderRadius="md"
-                                            color={sub.isActive ? "blue.600" : "gray.500"}
-                                            bg={sub.isActive ? "blue.50" : "transparent"}
-                                            _hover={{ bg: "gray.50" }}
-                                            cursor="pointer"
-                                        >
-                                            <sub.icon size={18} variant="Outline" />
-                                            <Text
-                                                fontWeight={sub.isActive ? "semibold" : "medium"}
-                                                fontSize="sm"
-                                            >
-                                                {sub.label}
-                                            </Text>
-                                        </HStack>
-                                    ))}
-                                </VStack>
-                            )}
-                        </Box>
-                    ))}
-                </VStack>
+                <Box>
+                    <NavItem icon={Maximize1} label="Rooster" hasSubmenu isOpen isActive={false} />
+                    <VStack gap={0} align="stretch" mt={1}>
+                        <NavItem icon={DocumentText} label="Mijn Rooster" isSubItem />
+                        <NavItem icon={Stickynote} label="Planner" isSubItem isActive />
+                        <NavItem icon={Stickynote} label="Instellingen" isSubItem />
+                    </VStack>
+                </Box>
+
+                <NavItem icon={Stickynote} label="My to do Protocols" />
+                <NavItem icon={Document} label="Document Management" />
+                <NavItem icon={Notepad2} label="Department News" />
+                <NavItem icon={MenuBoard} label="Knowledge Base" />
+                <NavItem icon={DocumentText} label="General News" />
             </VStack>
-        </Box>
+        </Flex>
     )
 }

@@ -5,9 +5,10 @@ const customConfig = defineConfig({
         tokens: {
             colors: {
                 brand: {
+                    primary: { value: "#5653FC" },
                     orange: { value: "#FF8D28" },
                     grey: { value: "#4E5D69" },
-                    blue: { value: "#3182ce" },
+                    blue: { value: "#009FE3" },
                     green: { value: "#38A169" },
                 },
             },
